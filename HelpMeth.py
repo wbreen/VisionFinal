@@ -60,3 +60,43 @@ def read_in_files(loc):
         file = cv2.imread(file)
         pieces.append(file)
     return pieces
+
+
+#For the battleship game: given contours and a hierarchy, return the largest blob
+    #This code was taken from here: http://opencvpython.blogspot.com/2012/06/sudoku-solver-part-2.html
+def biggest_blob(contours):
+    biggest = None
+    max_area = 0
+    for con in contours:
+        area = cv2.contourArea(con)
+        if area > 100:
+            peri = cv2.arcLength(con, True)
+            approx = cv2.approxPolyDP(con, 0.02*peri, True)
+            if area > max_area and len(approx)==4:
+                biggest = approx
+                max_area = area
+    return biggest
+    
+    
+#Resize the 4 corners of the game board in array like [t-left, t-right, b-left, b-right]
+#Code from part 3: http://opencvpython.blogspot.in/2012/06/sudoku-solver-part-3.html
+def resize_corr(b_corners):
+    b_corners = b_corners.reshape((4, 2))
+    new_corners = np.zeros((4, 2), dtype = np.float32)
+    #reorder the points of the blob from random to t-left, t-right, b-left, b-right
+    #with x,y coorinates: y+x: t-left is smallest sum, b-right is max sum (of both)
+    #with x,y coords: y-x: t-right is minimum, b-left is max
+    add = b_corners.sum(1)
+    new_corners[0] = b_corners[np.argmin(add)] #top left corner
+    new_corners[3] = b_corners[np.argmax(add)] #bottom right corner
+    diff = np.diff(b_corners, axis = 1)
+    new_corners[1] = b_corners[np.argmin(diff)] #top right corner
+    new_corners[2] = b_corners[np.argmax(diff)] #bottom left corner
+    
+    return new_corners
+
+
+
+
+
+
