@@ -72,5 +72,33 @@ This method will take an image with the given playing board and identify the squ
 It will return a 2D array that will represent if the given spot is a hit, miss, or not yet guessed (empty)
 '''
 def find_squares(board):
-    game_state = [[]]
-    return game_state
+    # here is a reference document: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
+    #get image (board)
+    #convert to grayscale
+    g_board = hm.gray(board)
+    #Blurr(?)
+    g_board = hm.gaus_blur(g_board, 9)
+    #get Canny edges for the given grayscale picture
+    b_edge = cv2.Canny(g_board, 50, 150)
+    #run cv2.HoughLines on the Canny edges you got from cv2.Canny
+    board_lines = cv2.HoughLines(b_edge, 1, np.pi/180, 200)
+    #
+    num_lines = len(board_lines)
+    for line in range(num_lines):
+        for rho, theta in board_lines[line]:
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a*rho
+            y0 = b*rho
+            x1 = int(x0 + 1000*(-b))
+            y1 = int(y0 + 1000*(a))
+            x2 = int(x0 - 1000*(-b))
+            y2 = int(y0 - 1000*(a))
+        
+            cv2.line(board, (x1, y1), (x2, y2), (255,0,0),3)
+        
+        
+    hm.showSeries('board with lines drawn on', board)
+    
+#    game_state = [[]]
+#    return game_state

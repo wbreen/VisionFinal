@@ -12,7 +12,8 @@ import HelpMeth as hm
 import board_recognizer as br
 
 photos = 'grid_photos/'
-grid_size = 500 
+grid_size = 500
+
 
 grids = hm.read_in_files(photos)
 final_boards = []
@@ -22,3 +23,5 @@ for pic in grids:
     final_boards.append(board)
     #hm.showSeries('these are the final boards the algo found', board)
 
+for board in final_boards:
+    br.find_squares(board)
