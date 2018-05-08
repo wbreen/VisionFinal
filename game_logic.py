@@ -7,9 +7,9 @@ Game Logic for battleship game
 '''
 Todo in this file
 Low target:
-    Create gameboard
-    Place ships on gameboard
-    Guess a random spot
+    Create gameboard (done)
+    Place ships on gameboard (done)
+    Guess a random spot 
     Say if given spot (from user) is a hit or a miss
     
 Medium target:
@@ -47,9 +47,9 @@ hit = 2
 row_letters = ['A','B','C','D','E','F','G','H','I','J']
 
 
-def init_game(rows, cols, ships=5,debug=False, def_num_ship=False):
+def init_game(rows, cols, debug=False, def_num_ship=False):
     ''' Need (low):
-        board with ships on [default of 5 ships] (TODO)
+        board with ships on [default of 5 ships] (TODO)(done)
         board to guess on (TODO)
     '''
     #create boards of 0's
@@ -63,7 +63,8 @@ def init_game(rows, cols, ships=5,debug=False, def_num_ship=False):
             num_this_type = input("how many",ship_type, "would you like to play with? \n")
             num_each_ship.append(num_this_type)
     
-    secret_board=make_secret(board, num_each_ship)
+    secret_board=make_secret(secret_board, num_each_ship)
+    return secret_board, guess_board
     
     
 #board[rows, cols]
@@ -121,7 +122,33 @@ def make_secret(board, num_each, debug=False):
         ship_type_looking_at+=1
     return board
             
-#debugging stuff
+#debugging/testing stuff
 fake_b1 = np.zeros((10,10), dtype=np.uint8)
-fake_num1 = [1,1,1,2,2]
-print(make_secret(fake_b1, fake_num1, True))
+#fake_num1 = [1,1,1,2,2]
+#print(make_secret(fake_b1, fake_num1, True))
+    
+def guess_shot(board, debug=False):
+    rows, cols = board.shape[:2]
+#    if debug: print('num rows is', rows, 'num cols is', cols)
+    g_r = random.randint(0, rows-1)
+    g_c = random.randint(0, cols-1)
+    guess = (g_r, g_c)
+    return guess
+
+
+def tell_result(board, guess, debug=False):
+    board[guess]+=1
+    if debug: print(board)
+    shot = board[guess]
+    if shot == 1:
+        print('miss')
+    if shot >= 2:
+        print('hit')
+    
+
+#more debugging stuff
+#i=0
+#while i<100:
+#    i+=1
+#    rand_guess = guess_shot(fake_b1, True)
+#    tell_result(fake_b1, rand_guess, False)
