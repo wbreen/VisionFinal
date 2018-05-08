@@ -95,10 +95,27 @@ def find_squares(board):
             x2 = int(x0 - 1000*(-b))
             y2 = int(y0 - 1000*(a))
         
-            cv2.line(board, (x1, y1), (x2, y2), (255,0,0),3)
+            cv2.line(board, (x1, y1), (x2, y2), (255,0,0),3) #Draws a line on the board, so show it has been found
         
         
     hm.showSeries('board with lines drawn on', board)
     
 #    game_state = [[]]
 #    return game_state
+
+
+'''
+This method is based off of the C from aishack.in/tutorials/sudoku-grabber-opencv-detection
+'''
+def find_merge_lines(picture): 
+    g_pic = hm.gray(picture) #make sure its grayscale
+    outerbox = np.zeros(g_pic.size(), np.uint8) #create an image to put the final outer box of the playing board
+    blur = hm.gaus_blur(g_pic, 11) #blur the image
+    outerbox = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 2) # threshold the blurred image
+    cv2.bitwise_not(outerbox, outerbox)   # Invert the image, looking for the black lines
+    
+def merge_lines(lines):
+    for rho, theta in lines:
+        if rho!=0 and theta !=-100:
+            #determine if the line is vertical or horizontal, and do different things accordingly
+            p1
