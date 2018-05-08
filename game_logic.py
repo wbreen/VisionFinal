@@ -88,17 +88,17 @@ def make_secret(board, num_each, debug=False):
                 o=False
                 while o is False:
                     board[s_row, s_col:s_col+ship_len] +=1
-                    is_two = np.where(board[s_row, s_col:s_col+ship_len]>1)
+                    is_two = np.where(board[s_row, s_col:s_col+ship_len]>=2)
                     if debug: print(is_two[0])
-                    if len(is_two[0]) <1:#make sure you haven't placed over another ship
-                        o=True
-                    else:
+                    if len(is_two[0]) >=1:#make sure you haven't placed over another ship
                         if debug: print('failed board')
                         if debug: print(board)
                         board = curr_board.copy()
                         s_row, s_col = random.randint(0, ok_row), random.randint(0, ok_col)
                         if debug: print('trying again')
                         if debug: print(board)
+                    elif len(is_two[0])==0:
+                        o=True
                 
             #place vertically
             if orient==2:
@@ -106,21 +106,22 @@ def make_secret(board, num_each, debug=False):
                 o=False
                 while o is False:
                     board[s_row:s_row+ship_len, s_col] +=1
-                    is_two = np.where(board[s_row, s_col:s_col+ship_len]>1)
+                    is_two = np.where(board[s_row:s_row+ship_len, s_col]>=2)
                     if debug: print(is_two[0])
-                    if len(is_two[0]) <1:#make sure you haven't placed over another ship
-                        o=True
-                    else:
+                    if len(is_two[0]) >=1:#make sure you haven't placed over another ship
                         if debug: print('failed board')
                         if debug: print(board)
                         board = curr_board.copy()
                         s_row, s_col = random.randint(0, ok_row), random.randint(0, ok_col)
                         if debug: print('trying again')
                         if debug: print(board)
+                        
+                    elif len(is_two[0])==0:
+                        o=True
         ship_type_looking_at+=1
     return board
             
 #debugging stuff
 fake_b1 = np.zeros((10,10), dtype=np.uint8)
 fake_num1 = [1,1,1,2,2]
-print(make_secret(fake_b1, fake_num1))
+print(make_secret(fake_b1, fake_num1, True))
