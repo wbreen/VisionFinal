@@ -13,9 +13,9 @@ see if there are hits/misses on the board already,
 '''
 Targets:
 Low target:
-    identify the board and center it
-    output the number of rows and columns
-    get the right number of squares
+    identify the board and center it (done)
+    output the number of rows and columns (TODO)
+    get the right number of squares (TODO)
     
 Medium target:
     identify where a guess has been made
