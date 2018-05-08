@@ -9,6 +9,21 @@ create a new picture with the gameboard centered,
 see if there are hits/misses on the board already,
 
 """
+
+'''
+Targets:
+Low target:
+    identify the board and center it
+    output the number of rows and columns
+    get the right number of squares
+    
+Medium target:
+    identify where a guess has been made
+    
+High target:
+    No longer work on a constant video feed, only on pictures of the board
+    identify and weed out only the most recent guess
+'''
 #all needed imports
 import numpy as np
 import cv2
