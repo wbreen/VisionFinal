@@ -50,7 +50,7 @@ row_letters = ['A','B','C','D','E','F','G','H','I','J']
 def init_game(rows, cols, debug=False, def_num_ship=False):
     ''' Need (low):
         board with ships on [default of 5 ships] (TODO)(done)
-        board to guess on (TODO)
+        board to guess on (TODO) (done)
     '''
     #create boards of 0's
         #this way, 0's can be not guessed, 1's can be guesses/misses, and (later) 2's can be hits
@@ -126,7 +126,8 @@ def make_secret(board, num_each, debug=False):
 fake_b1 = np.zeros((10,10), dtype=np.uint8)
 #fake_num1 = [1,1,1,2,2]
 #print(make_secret(fake_b1, fake_num1, True))
-    
+
+#This method will guess a random shot in the board
 def guess_shot(board, debug=False):
     rows, cols = board.shape[:2]
 #    if debug: print('num rows is', rows, 'num cols is', cols)
@@ -135,7 +136,7 @@ def guess_shot(board, debug=False):
     guess = (g_r, g_c)
     return guess
 
-
+#This will tell if the given guess is a hit or miss, and add it to the board
 def tell_result(board, guess, debug=False):
     board[guess]+=1
     if debug: print(board)
@@ -144,11 +145,11 @@ def tell_result(board, guess, debug=False):
         print('miss')
     if shot >= 2:
         print('hit')
-    
+    return board
 
 #more debugging stuff
-#i=0
-#while i<100:
-#    i+=1
-#    rand_guess = guess_shot(fake_b1, True)
-#    tell_result(fake_b1, rand_guess, False)
+i=0
+while i<100:
+    i+=1
+    rand_guess = guess_shot(fake_b1)
+    tell_result(fake_b1, rand_guess)

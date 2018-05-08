@@ -110,10 +110,10 @@ def find_squares(board):
             x2 = int(x0 - 1000*(-b))
             y2 = int(y0 - 1000*(a))
         
-            cv2.line(board, (x1, y1), (x2, y2), (255,0,0),3) #Draws a line on the board, so show it has been found
+            cv2.line(board, (x1, y1), (x2, y2), (255,255,0),2) #Draws a line on the board, so show it has been found
         
         
-    hm.showSeries('board with lines drawn on', board)
+    hm.showImage('board with lines drawn on', board)
     
 #    game_state = [[]]
 #    return game_state
