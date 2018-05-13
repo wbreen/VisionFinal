@@ -86,7 +86,7 @@ def find_playing_board(img, out_size):
 This method will take an image with the given playing board and identify the squares in it
 It will return a 2D array that will represent if the given spot is a hit, miss, or not yet guessed (empty)
 '''
-def find_squares(board):
+def find_b_lines(board):
     # here is a reference document: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #get image (board)
     #convert to grayscale
@@ -113,7 +113,7 @@ def find_squares(board):
             cv2.line(board, (x1, y1), (x2, y2), (255,255,0),2) #Draws a line on the board, so show it has been found
         
         
-    hm.showImage('board with lines drawn on', board)
+#    hm.showImage('board with lines drawn on', board)
     
 #    game_state = [[]]
 #    return game_state
@@ -129,8 +129,49 @@ def find_merge_lines(picture):
     outerbox = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 2) # threshold the blurred image
     cv2.bitwise_not(outerbox, outerbox)   # Invert the image, looking for the black lines
     
+'''
 def merge_lines(lines):
     for rho, theta in lines:
         if rho!=0 and theta !=-100:
             #determine if the line is vertical or horizontal, and do different things accordingly
             p1
+            
+'''
+
+#This code comes from these two websites for finding shapes:
+#https://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
+#https://stackoverflow.com/questions/11424002/how-to-detect-simple-geometric-shapes-using-opencv
+
+
+def find_squares(board):
+    copy = board.copy()
+
+# convert the resized image to grayscale, blur it slightly,
+# and threshold it
+    gray = cv2.cvtColor(copy, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    ret, thresh = cv2.threshold(blurred, 130, 255, cv2.THRESH_BINARY)
+#    hm.showImage('thresh', thresh)
+ 
+# find contours in the thresholded image and initialize the
+# shape detector
+    _,cnts,_ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    squares = []
+    for c in cnts:
+	# compute the center of the contour, then detect the name of the
+	# shape using only the contour
+        approx = cv2.approxPolyDP(c, 0.04*cv2.arcLength(c, True), True)
+#        print(len(approx))
+        if len(approx)==4:
+#            cv2.drawContours(copy, [c], 0, (255, 0,0), -1)
+            (x, y, w, h) = cv2.boundingRect(approx)
+            cv2.rectangle(copy,(x,y),(x+w, y+h), (0,255,0),1)
+            squares.append((x, y, x+w, y+h))
+            
+	# multiply the contour (x, y)-coordinates by the resize ratio,
+	# then draw the contours and the name of the shape on the image
+
+	# show the output image
+#        cv2.imshow("Image", copy)
+#        cv2.waitKey(0)
+    return squares, copy
