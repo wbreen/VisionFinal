@@ -12,7 +12,7 @@ import HelpMeth as hm
 import board_recognizer as br
 
 photos = 'grid_photos/'
-
+guesses = 'grid_guesses/'
 two = '2x2_v2.jpg'
 three = '3x3_v2.jpg'
 four = '4x4_v4.jpg'

@@ -175,3 +175,8 @@ def find_squares(board):
 #        cv2.imshow("Image", copy)
 #        cv2.waitKey(0)
     return squares, copy
+
+
+#This method will find if the given square holds a dot, representing a guess by the player
+def find_guess(square):
+    
