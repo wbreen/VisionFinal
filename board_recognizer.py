@@ -170,7 +170,9 @@ def find_squares(board):
 #            squares.append((x, y, x+w, y+h))
             squares.append(board[x:x+w, y:y+h])
             square_loc.append((x, y))
-            cv2.rectangle(copy,(x,y),(x+w, y+h), (0,255,0),1)
+            if find_guess(board[x:x+w, y:y+h]):
+                cv2.rectangle(copy,(y,x),(y+w, x+h), (0,0,255),1)
+            else: cv2.rectangle(copy, (y,x),(y+w, x+h), (255,0,0))
 #            print((x, y, x+w, y+h))
             
 	# multiply the contour (x, y)-coordinates by the resize ratio,
@@ -178,6 +180,7 @@ def find_squares(board):
 	# show the output image
 #        cv2.imshow("Image", copy)
 #        cv2.waitKey(0)
+    cv2.imwrite('output/find_guesses.jpg', copy)
     return squares, square_loc, copy
 
 #I need the size of the board

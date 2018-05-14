@@ -29,7 +29,8 @@ import random
 
 #Global variables
 ship_types = ['Aircraft Carriers', 'Battleships','Cruisers','Submarines','Destroyers']
-num_each_ship = [1, 1, 1, 2, 2]
+#num_each_ship = [1, 1, 1, 2, 2]
+num_each_ship = [0, 0, 0, 0, 1]
 #ships values (length)
 CV=5
 BB=4
@@ -47,8 +48,6 @@ hit = 2
 row_letters = ['A','B','C','D','E','F','G','H','I','J']
 
 
-def play_game(
-        )
 
 
 def init_game(rows, cols, debug=False, def_num_ship=False):
@@ -60,11 +59,11 @@ def init_game(rows, cols, debug=False, def_num_ship=False):
         #this way, 0's can be not guessed, 1's can be guesses/misses, and (later) 2's can be hits
     secret_board = np.zeros((rows, cols), dtype=np.uint8)
     guess_board = np.zeros((rows, cols), dtype=np.uint8)
-    
+    num_each_ship=[0, 0, 0, 0, 1]
     if not def_num_ship:
         num_each_ship = []
         for ship_type in ship_types:
-            num_this_type = input("how many",ship_type, "would you like to play with? \n")
+            num_this_type = input("how many "+ship_type+ " would you like to play with? \n")
             num_each_ship.append(num_this_type)
     
     secret_board=make_secret(secret_board, num_each_ship)
@@ -76,7 +75,7 @@ def init_game(rows, cols, debug=False, def_num_ship=False):
 def make_secret(board, num_each, debug=False):
     ship_type_looking_at=0
     for ship in num_each: #for each ship type
-        for num_place in range(ship): #for the number of ships given in each ship type
+        for num_place in range(int(ship)): #for the number of ships given in each ship type
             ship_len = ship_lens[ship_type_looking_at] #get the length
 #            curr_board = [row[:] for row in board] #copy the current board just in case there's a mistake to go back to
             curr_board = board.copy()
@@ -152,8 +151,8 @@ def tell_result(board, guess, debug=False):
     return board
 
 #more debugging stuff
-i=0
-while i<100:
-    i+=1
-    rand_guess = guess_shot(fake_b1)
-    tell_result(fake_b1, rand_guess)
+#i=0
+#while i<100:
+#    i+=1
+#    rand_guess = guess_shot(fake_b1)
+#    tell_result(fake_b1, rand_guess)
