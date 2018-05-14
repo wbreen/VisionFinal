@@ -14,11 +14,11 @@ see if there are hits/misses on the board already,
 Targets:
 Low target:
     identify the board and center it (done)
-    output the number of rows and columns (TODO)
-    get the right number of squares (TODO)
+    output the number of rows and columns (done(?))
+    get the right number of squares (done)
     
 Medium target:
-    identify where a guess has been made
+    identify where a guess has been made(done)
     
 High target:
     No longer work on a constant video feed, only on pictures of the board
@@ -28,6 +28,7 @@ High target:
 import numpy as np
 import cv2
 import HelpMeth as hm
+import math
 
 
 #taking in the photos
@@ -157,6 +158,7 @@ def find_squares(board):
 # shape detector
     _,cnts,_ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     squares = []
+    square_loc = []
     for c in cnts:
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
@@ -165,18 +167,93 @@ def find_squares(board):
         if len(approx)==4:
 #            cv2.drawContours(copy, [c], 0, (255, 0,0), -1)
             (x, y, w, h) = cv2.boundingRect(approx)
+#            squares.append((x, y, x+w, y+h))
+            squares.append(board[x:x+w, y:y+h])
+            square_loc.append((x, y))
             cv2.rectangle(copy,(x,y),(x+w, y+h), (0,255,0),1)
-            squares.append((x, y, x+w, y+h))
+#            print((x, y, x+w, y+h))
             
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape on the image
-
 	# show the output image
 #        cv2.imshow("Image", copy)
 #        cv2.waitKey(0)
-    return squares, copy
+    return squares, square_loc, copy
 
+#I need the size of the board
+def board_size(squares):
+    size = int(math.sqrt(len(squares)))
+    return size
+
+#I need a way to put the squares in a 2D array
+#so this method will take the list of squares, and create a 2D numpy array to store them correctly
+def align_squares_corr(squares, location, board):
+    size = board_size(squares)
+    aligned = np.zeros((size, size), dtype=np.uint8)
+#    print(len(board[0]))
+#    print(len(board[1]))
+    ran_x, ran_y =int((len(board[0])/size)), int((len(board[1])/size))
+    sqr_num = 0
+    for (x, y) in location:
+        x_cl, y_cl = False, False
+#        print('x and y are', x, y)
+        i=0
+        while not x_cl and i<size:
+            if i*ran_x-(.5*ran_x) <= x and (i+1)*ran_x-(.5*ran_x) >= x:
+                j=0
+                while not y_cl and j<size:
+                    if j*ran_y-(.5*ran_y)  <=y and (j+1)*ran_y-(.5*ran_y)  >=y:
+                        aligned[j, i] = sqr_num
+#                        print('placing at', i, j)
+                        y_cl=True
+                    j+=1
+                x_cl = True
+            i+=1
+        sqr_num +=1
+    
+    return aligned
+    
 
 #This method will find if the given square holds a dot, representing a guess by the player
+#It returns true if there is a guess, and false if there isn't a guess
 def find_guess(square):
-    
+    been_guessed = False
+    centered = cv2.resize(square, (200, 200))
+    centered = centered[25:175, 25:175]
+    centered = hm.gray(centered)
+    ret, thresh = cv2.threshold(centered, 100, 255, cv2.THRESH_BINARY_INV)
+    #clean up the image
+    size = 10
+    strucEle = cv2.getStructuringElement(cv2.MORPH_RECT, (size, size))
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, strucEle)
+    _, contours, _ = cv2.findContours(close, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    if len(contours) >=1:
+        been_guessed=True
+#        hm.showImage('original square', centered)
+#        hm.showImage('thresholded', close)
+    return been_guessed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

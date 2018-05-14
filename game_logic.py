@@ -47,6 +47,10 @@ hit = 2
 row_letters = ['A','B','C','D','E','F','G','H','I','J']
 
 
+def play_game(
+        )
+
+
 def init_game(rows, cols, debug=False, def_num_ship=False):
     ''' Need (low):
         board with ships on [default of 5 ships] (TODO)(done)
